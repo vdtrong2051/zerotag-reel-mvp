@@ -1,0 +1,3 @@
+gateway_id,gateway_name,location,status
+ZG-001,ZeroGateway MVP,SMT Issue Station 01,ONLINE
+ZG-002,ZeroGateway Backup,Warehouse Inbound Gate,OFFLINE

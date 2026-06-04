@@ -1,0 +1,3 @@
+bom_code,product_name,description,status
+PCB-DEMO-01,Demo Control Board,BOM for ZeroTag MVP demo,ACTIVE
+PCB-DEMO-02,Sensor Module Demo,Second BOM for extended demo,ACTIVE

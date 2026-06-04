@@ -1,0 +1,27 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ruff_cache/
+
+# Environment
+.env
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Exported data
+data/exports/
+
+# Streamlit
+dashboard/.streamlit/
+
+# IDE / OS
+.vscode/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,8 @@
+{
+  "gateway_id": "ZG-001",
+  "zerotag_id": "ZT-R1005",
+  "tag_uid": "UID-R1005",
+  "mode": "BOM_CHECK",
+  "location": "SMT Issue Station 01",
+  "bom_code": "PCB-DEMO-01"
+}

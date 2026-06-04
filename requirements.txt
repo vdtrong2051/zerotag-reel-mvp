@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+sqlalchemy
+pydantic
+python-dotenv
+streamlit
+pandas
+requests
+httpx
+pytest
+black
+ruff
+openpyxl

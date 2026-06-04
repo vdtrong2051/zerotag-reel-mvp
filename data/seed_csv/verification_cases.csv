@@ -1,0 +1,4 @@
+zerotag_id,qr_id,rfid_id,verification_result,reason
+ZT-R1001,ZT-R1001,ZT-R1001,VERIFIED,QR ID and RFID ID matched
+ZT-R1015,ZT-R1015,ZT-R9915,QR_RFID_MISMATCH,QR ID and RFID ID do not match
+ZT-R9999,ZT-R9999,,UNKNOWN_TAG,Tag not found in system
