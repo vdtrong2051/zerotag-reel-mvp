@@ -9,6 +9,7 @@ from typing import Any
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
+from backend.app.api.v1 import api_router
 from backend.app.core.config import get_settings
 from backend.app.core.database import (
     create_database_tables,
@@ -64,6 +65,11 @@ app = FastAPI(
 )
 
 app.state.settings = settings
+
+app.include_router(
+    api_router,
+    prefix=settings.api_v1_prefix,
+)
 
 
 @app.exception_handler(AppError)
