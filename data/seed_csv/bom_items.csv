@@ -1,6 +1,6 @@
-bom_code,required_part_number,allowed_lot,allowed_date_code_from,allowed_date_code_to,required_quantity,bom_ref
-PCB-DEMO-01,RES-10K-0603,L2026A01,2520,2540,100,R12
-PCB-DEMO-01,CAP-100N-0603,L2026B02,2518,2530,100,C5
-PCB-DEMO-01,IC-NE555,L2026C03,2509,2525,10,U1
-PCB-DEMO-02,RES-10K-0603,L2026A01,2520,2540,50,R1
-PCB-DEMO-02,CAP-10UF-0805,L2025X09,2519,2530,20,C2
+﻿bom_code,bom_ref,required_part_number,allowed_lot,allowed_date_code_from,allowed_date_code_to,required_quantity,note
+PCB-DEMO-01,R12,RES-10K-0603,L2026A01,2520,2540,100,Main resistor position
+PCB-DEMO-01,C5,CAP-100N-0603,L2026B02,2518,2530,100,Decoupling capacitor
+PCB-DEMO-01,U1,IC-NE555,L2026C03,2509,2525,10,Timer IC
+PCB-DEMO-02,R1,RES-10K-0603,L2026A01,2520,2540,50,Sensor module resistor
+PCB-DEMO-02,C2,CAP-10UF-0805,L2025X09,2519,2530,20,Sensor module capacitor

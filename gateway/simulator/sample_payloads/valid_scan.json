@@ -1,8 +1,11 @@
 {
+  "request_id": "REQ-BOM-VALID-0001",
   "gateway_id": "ZG-001",
-  "zerotag_id": "ZT-R1001",
-  "tag_uid": "UID-R1001",
   "mode": "BOM_CHECK",
   "location": "SMT Issue Station 01",
-  "bom_code": "PCB-DEMO-01"
+  "zerotag_id": "ZT-R1001",
+  "tag_uid": "UID-R1001",
+  "bom_code": "PCB-DEMO-01",
+  "bom_ref": "R12",
+  "read_at": "2026-06-06T09:30:00+07:00"
 }

@@ -1,4 +1,6 @@
-zerotag_id,qr_id,rfid_id,verification_result,reason
-ZT-R1001,ZT-R1001,ZT-R1001,VERIFIED,QR ID and RFID ID matched
-ZT-R1015,ZT-R1015,ZT-R9915,QR_RFID_MISMATCH,QR ID and RFID ID do not match
-ZT-R9999,ZT-R9999,,UNKNOWN_TAG,Tag not found in system
+﻿case_id,zerotag_id,qr_id,rfid_id,tag_uid_read,expected_result,reason
+VC-001,ZT-R1001,ZT-R1001,ZT-R1001,UID-R1001,VALID,QR RFID and physical tag UID matched
+VC-002,ZT-R1015,ZT-R1015,ZT-R9915,UID-R1015,QR_RFID_MISMATCH,QR ID and RFID ID do not match
+VC-003,ZT-R1015,ZT-R1015,ZT-R1015,UNKNOWN-UID,TAMPER_WARNING,Physical tag UID does not match registered UID
+VC-004,ZT-R9999,ZT-R9999,,UID-R9999,UNKNOWN_TAG,Tag is not registered in system
+VC-005,ZT-R1016,ZT-R1016,ZT-R1016,UID-R1016,BLOCKED_TAG,Component is already blocked
