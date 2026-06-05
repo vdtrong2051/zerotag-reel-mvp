@@ -1,0 +1,104 @@
+from enum import StrEnum
+
+
+class ComponentStatus(StrEnum):
+    REGISTERED = "REGISTERED"
+    IN_STOCK = "IN_STOCK"
+    ISSUED = "ISSUED"
+    BLOCKED = "BLOCKED"
+    SCRAPPED = "SCRAPPED"
+
+
+class BomStatus(StrEnum):
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"
+
+
+class ScanMode(StrEnum):
+    INBOUND = "INBOUND"
+    BOM_CHECK = "BOM_CHECK"
+    RETURN = "RETURN"
+    VERIFY = "VERIFY"
+
+
+class ScanResult(StrEnum):
+    VALID = "VALID"
+    WRONG_PART = "WRONG_PART"
+    LOT_MISMATCH = "LOT_MISMATCH"
+    DATECODE_MISMATCH = "DATECODE_MISMATCH"
+    UNKNOWN_TAG = "UNKNOWN_TAG"
+    BLOCKED_TAG = "BLOCKED_TAG"
+    QR_RFID_MISMATCH = "QR_RFID_MISMATCH"
+    TAMPER_WARNING = "TAMPER_WARNING"
+
+
+class EventResult(StrEnum):
+    OK = "OK"
+    WARNING = "WARNING"
+    FAIL = "FAIL"
+
+
+class EventType(StrEnum):
+    REEL_SCANNED = "REEL_SCANNED"
+    WAREHOUSE_IN = "WAREHOUSE_IN"
+
+    BOM_CHECK_STARTED = "BOM_CHECK_STARTED"
+    BOM_MATCH_OK = "BOM_MATCH_OK"
+    BOM_MATCH_FAIL = "BOM_MATCH_FAIL"
+
+    LOT_MISMATCH = "LOT_MISMATCH"
+    DATECODE_MISMATCH = "DATECODE_MISMATCH"
+    WARNING_ISSUED = "WARNING_ISSUED"
+    UNKNOWN_TAG = "UNKNOWN_TAG"
+
+    RETURN_TO_STOCK = "RETURN_TO_STOCK"
+    COMPONENT_ISSUED = "COMPONENT_ISSUED"
+
+    VERIFICATION_PASSED = "VERIFICATION_PASSED"
+    VERIFICATION_FAILED = "VERIFICATION_FAILED"
+    TAMPER_WARNING = "TAMPER_WARNING"
+    BLOCKED_TAG = "BLOCKED_TAG"
+    TAG_BLOCKED = "TAG_BLOCKED"
+
+
+class GatewayType(StrEnum):
+    SIMULATOR = "SIMULATOR"
+    ESP32_NFC = "ESP32_NFC"
+    ESP32_RFID = "ESP32_RFID"
+    ESP32_UHF = "ESP32_UHF"
+
+
+class GatewayStatus(StrEnum):
+    ONLINE = "ONLINE"
+    OFFLINE = "OFFLINE"
+    DISABLED = "DISABLED"
+
+
+class LabelType(StrEnum):
+    STANDARD = "STANDARD"
+    ANTI_TAMPER = "ANTI_TAMPER"
+
+
+class TamperStatus(StrEnum):
+    NORMAL = "NORMAL"
+    WARNING = "WARNING"
+
+
+class MSLStatus(StrEnum):
+    NORMAL = "NORMAL"
+    WARNING = "WARNING"
+    NEED_BAKE = "NEED_BAKE"
+
+
+class LedAction(StrEnum):
+    OFF = "OFF"
+    GREEN = "GREEN"
+    YELLOW = "YELLOW"
+    RED = "RED"
+
+
+class BuzzerAction(StrEnum):
+    NONE = "NONE"
+    SHORT_BEEP = "SHORT_BEEP"
+    DOUBLE_BEEP = "DOUBLE_BEEP"
+    LONG_BEEP = "LONG_BEEP"
