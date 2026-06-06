@@ -1,10 +1,22 @@
 from __future__ import annotations
 
 from sqlalchemy import func, select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Load, Session, selectinload
 
 from backend.app.core.enums import ScanMode, ScanResult
 from backend.app.models.scan_transaction import ScanTransaction
+
+
+def _detail_load_options() -> tuple[Load, ...]:
+    """Các relationship cần để dựng lại scan response."""
+
+    return (
+        selectinload(ScanTransaction.component),
+        selectinload(ScanTransaction.gateway),
+        selectinload(ScanTransaction.bom),
+        selectinload(ScanTransaction.bom_item),
+        selectinload(ScanTransaction.events),
+    )
 
 
 def list_transactions(
@@ -60,18 +72,28 @@ def list_transactions(
 def get_by_id(
     session: Session,
     scan_transaction_id: int,
+    *,
+    include_details: bool = False,
 ) -> ScanTransaction | None:
     """Tìm transaction theo khóa nội bộ."""
 
-    return session.get(
-        ScanTransaction,
-        scan_transaction_id,
+    statement = select(ScanTransaction).where(
+        ScanTransaction.id == scan_transaction_id
     )
+
+    if include_details:
+        statement = statement.options(
+            *_detail_load_options()
+        )
+
+    return session.scalar(statement)
 
 
 def get_by_transaction_id(
     session: Session,
     transaction_id: str,
+    *,
+    include_details: bool = False,
 ) -> ScanTransaction | None:
     """Tìm transaction theo mã nghiệp vụ."""
 
@@ -79,18 +101,34 @@ def get_by_transaction_id(
         ScanTransaction.transaction_id == transaction_id
     )
 
+    if include_details:
+        statement = statement.options(
+            *_detail_load_options()
+        )
+
     return session.scalar(statement)
 
 
 def get_by_request_id(
     session: Session,
     request_id: str,
+    *,
+    include_details: bool = False,
 ) -> ScanTransaction | None:
-    """Tìm transaction bằng request ID chống gửi trùng."""
+    """Tìm transaction bằng request ID chống gửi trùng.
+
+    Khi include_details=True, tải sẵn Component, Gateway,
+    BOM, BOMItem và Event để có thể dựng lại response replay.
+    """
 
     statement = select(ScanTransaction).where(
         ScanTransaction.request_id == request_id
     )
+
+    if include_details:
+        statement = statement.options(
+            *_detail_load_options()
+        )
 
     return session.scalar(statement)
 
