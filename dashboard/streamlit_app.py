@@ -1,13 +1,18 @@
 from __future__ import annotations
 
-import os
 from pathlib import Path
+from typing import Any
 
 import streamlit as st
-from dotenv import load_dotenv
+
+from dashboard.api_client import (
+    BackendClient,
+    BackendClientError,
+)
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
 STYLE_PATH = (
     PROJECT_ROOT
     / "dashboard"
@@ -16,22 +21,7 @@ STYLE_PATH = (
     / "main.css"
 )
 
-load_dotenv(PROJECT_ROOT / ".env")
-
-
-BACKEND_HOST = os.getenv(
-    "BACKEND_HOST",
-    "127.0.0.1",
-)
-
-BACKEND_PORT = os.getenv(
-    "BACKEND_PORT",
-    "8000",
-)
-
-BACKEND_BASE_URL = (
-    f"http://{BACKEND_HOST}:{BACKEND_PORT}"
-)
+BACKEND_CLIENT = BackendClient.from_env()
 
 
 CORE_PAGES = [
@@ -79,7 +69,7 @@ CORE_PAGES = [
 
 
 def load_dashboard_styles() -> None:
-    """Nạp CSS chung cho Dashboard."""
+    """Nạp CSS chung của Dashboard."""
 
     if not STYLE_PATH.exists():
         return
@@ -99,7 +89,7 @@ def render_page_card(
     title: str,
     description: str,
 ) -> None:
-    """Hiển thị một card mô tả trang Dashboard."""
+    """Hiển thị card giới thiệu một trang Dashboard."""
 
     st.markdown(
         f"""
@@ -113,6 +103,50 @@ def render_page_card(
     )
 
 
+@st.cache_data(
+    ttl=5,
+    show_spinner=False,
+)
+def check_backend_health(
+    base_url: str,
+    api_prefix: str,
+) -> tuple[bool, dict[str, Any] | str]:
+    """Kiểm tra Backend mà không làm Dashboard bị crash."""
+
+    client = BackendClient(
+        base_url=base_url,
+        api_prefix=api_prefix,
+    )
+
+    try:
+        health_data = client.health_check()
+    except BackendClientError as error:
+        return False, str(error)
+
+    return True, health_data
+
+
+def get_backend_identity(
+    backend_health: dict[str, Any] | str,
+) -> tuple[str, str]:
+    """Lấy tên ứng dụng và môi trường từ health response."""
+
+    if not isinstance(backend_health, dict):
+        return "ZeroTag Backend", "unknown"
+
+    backend_name = backend_health.get(
+        "app",
+        "ZeroTag Backend",
+    )
+
+    environment = backend_health.get(
+        "environment",
+        "unknown",
+    )
+
+    return str(backend_name), str(environment)
+
+
 st.set_page_config(
     page_title="ZeroTag Reel Control Center",
     page_icon="🏷️",
@@ -123,6 +157,16 @@ st.set_page_config(
 load_dashboard_styles()
 
 
+backend_online, backend_health = check_backend_health(
+    BACKEND_CLIENT.base_url,
+    BACKEND_CLIENT.api_prefix,
+)
+
+backend_name, backend_environment = get_backend_identity(
+    backend_health
+)
+
+
 with st.sidebar:
     st.markdown("## ZeroTag")
     st.caption("Reel Traceability MVP")
@@ -130,27 +174,52 @@ with st.sidebar:
     st.divider()
 
     st.markdown("**Backend target**")
+
     st.code(
-        BACKEND_BASE_URL,
+        BACKEND_CLIENT.base_url,
         language=None,
     )
 
-    st.markdown(
-        '<span class="zt-pill">Connection not checked</span>',
-        unsafe_allow_html=True,
-    )
+    if backend_online:
+        st.success(
+            "Backend connected",
+            icon="✅",
+        )
 
-    st.caption(
-        "Backend health check sẽ được kết nối "
-        "sau khi BackendClient hoàn thành."
-    )
+        st.caption(
+            f"{backend_name} · {backend_environment}"
+        )
+    else:
+        st.error(
+            "Backend offline",
+            icon="⚠️",
+        )
+
+        st.caption(
+            str(backend_health)
+        )
+
+    if st.button(
+        "Refresh connection",
+        use_container_width=True,
+    ):
+        check_backend_health.clear()
+        st.rerun()
 
     st.divider()
 
     st.markdown("**Day 4 scope**")
+
     st.caption(
         "Overview · Inventory · Passport · "
         "BOM Matching · Event Log"
+    )
+
+    st.divider()
+
+    st.caption(
+        "MSL Tracking và Verification chưa nằm "
+        "trong phạm vi chức năng Day 4."
     )
 
 
@@ -160,9 +229,11 @@ st.markdown(
         <div class="zt-eyebrow">
             ZeroTag Reel MVP
         </div>
+
         <h1 class="zt-title">
             Reel Traceability Control Center
         </h1>
+
         <div class="zt-subtitle">
             Dashboard vận hành tập trung cho việc theo dõi
             component reel, kiểm tra BOM, hồ sơ số và audit
@@ -181,15 +252,31 @@ title_column, status_column = st.columns(
 
 with title_column:
     st.subheader("Dashboard Core Pages")
+
     st.caption(
         "Chọn một trang trong sidebar để bắt đầu."
     )
 
 with status_column:
-    st.info(
-        "App shell ready",
-        icon="✅",
-    )
+    if backend_online:
+        st.success(
+            "Backend connected",
+            icon="✅",
+        )
+
+        st.caption(
+            f"{backend_name} · {backend_environment}"
+        )
+    else:
+        st.warning(
+            "Backend offline",
+            icon="⚠️",
+        )
+
+        st.caption(
+            "Khởi động FastAPI backend rồi bấm "
+            "Refresh connection."
+        )
 
 
 columns = st.columns(3)
@@ -207,8 +294,9 @@ st.markdown(
     """
     <div class="zt-footer">
         Day 4 · Streamlit Dashboard Core ·
-        Backend API integration pending
+        Backend API health check active
     </div>
     """,
     unsafe_allow_html=True,
 )
+
