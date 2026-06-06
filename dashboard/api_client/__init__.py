@@ -1,0 +1,1 @@
+"""HTTP client layer for the ZeroTag backend."""
