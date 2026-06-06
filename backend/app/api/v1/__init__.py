@@ -5,6 +5,7 @@ from backend.app.api.v1 import (
     components,
     events,
     gateways,
+    scans,
 )
 
 
@@ -14,6 +15,7 @@ api_router.include_router(components.router)
 api_router.include_router(boms.router)
 api_router.include_router(events.router)
 api_router.include_router(gateways.router)
+api_router.include_router(scans.router)
 
 
 __all__ = [
