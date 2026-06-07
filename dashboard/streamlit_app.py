@@ -27,42 +27,42 @@ BACKEND_CLIENT = BackendClient.from_env()
 CORE_PAGES = [
     {
         "number": "01",
-        "title": "Overview Dashboard",
+        "title": "Tổng quan hệ thống",
         "description": (
-            "Theo dõi tổng số reel, trạng thái tồn kho, "
-            "cảnh báo BOM và các event mới nhất."
+            "Theo dõi tổng số cuộn linh kiện, trạng thái tồn kho, "
+            "cảnh báo BOM và các sự kiện mới nhất."
         ),
     },
     {
         "number": "02",
-        "title": "Component Inventory",
+        "title": "Danh sách linh kiện",
         "description": (
-            "Tìm kiếm và lọc reel theo ZeroTag ID, "
-            "part number, lot và trạng thái."
+            "Tìm kiếm và lọc cuộn linh kiện theo ZeroTag ID, "
+            "mã linh kiện, lot và trạng thái."
         ),
     },
     {
         "number": "03",
-        "title": "Digital Component Passport",
+        "title": "Hồ sơ số linh kiện",
         "description": (
-            "Xem hồ sơ số, thông tin lô, date-code, "
-            "số lượng và timeline truy xuất."
+            "Xem thông tin linh kiện, lot, date-code, số lượng, "
+            "vị trí và dòng thời gian truy xuất."
         ),
     },
     {
         "number": "04",
-        "title": "BOM Matching",
+        "title": "Đối chiếu BOM",
         "description": (
-            "Gửi yêu cầu scan tới backend và hiển thị "
-            "VALID, WRONG_PART hoặc LOT_MISMATCH."
+            "Gửi yêu cầu quét tới Backend và hiển thị kết quả "
+            "hợp lệ, sai mã linh kiện hoặc sai lot."
         ),
     },
     {
         "number": "05",
-        "title": "Event Log",
+        "title": "Nhật ký sự kiện",
         "description": (
-            "Theo dõi audit trail của các scan transaction "
-            "và lọc theo loại event hoặc kết quả."
+            "Theo dõi lịch sử giao dịch quét và lọc theo "
+            "loại sự kiện hoặc kết quả xử lý."
         ),
     },
 ]
@@ -91,14 +91,16 @@ def render_page_card(
 ) -> None:
     """Hiển thị card giới thiệu một trang Dashboard."""
 
+    card_html = (
+        '<div class="zt-card">'
+        f'<div class="zt-card-number">{number}</div>'
+        f'<div class="zt-card-title">{title}</div>'
+        f'<div class="zt-card-text">{description}</div>'
+        "</div>"
+    )
+
     st.markdown(
-        f"""
-        <div class="zt-card">
-            <div class="zt-card-number">{number}</div>
-            <div class="zt-card-title">{title}</div>
-            <div class="zt-card-text">{description}</div>
-        </div>
-        """,
+        card_html,
         unsafe_allow_html=True,
     )
 
@@ -132,7 +134,7 @@ def get_backend_identity(
     """Lấy tên ứng dụng và môi trường từ health response."""
 
     if not isinstance(backend_health, dict):
-        return "ZeroTag Backend", "unknown"
+        return "ZeroTag Backend", "không xác định"
 
     backend_name = backend_health.get(
         "app",
@@ -141,14 +143,14 @@ def get_backend_identity(
 
     environment = backend_health.get(
         "environment",
-        "unknown",
+        "không xác định",
     )
 
     return str(backend_name), str(environment)
 
 
 st.set_page_config(
-    page_title="ZeroTag Reel Control Center",
+    page_title="Trung tâm truy xuất cuộn linh kiện",
     page_icon="🏷️",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -169,11 +171,11 @@ backend_name, backend_environment = get_backend_identity(
 
 with st.sidebar:
     st.markdown("## ZeroTag")
-    st.caption("Reel Traceability MVP")
+    st.caption("Hệ thống truy xuất cuộn linh kiện")
 
     st.divider()
 
-    st.markdown("**Backend target**")
+    st.markdown("**Địa chỉ Backend**")
 
     st.code(
         BACKEND_CLIENT.base_url,
@@ -182,7 +184,7 @@ with st.sidebar:
 
     if backend_online:
         st.success(
-            "Backend connected",
+            "Backend đã kết nối",
             icon="✅",
         )
 
@@ -191,7 +193,7 @@ with st.sidebar:
         )
     else:
         st.error(
-            "Backend offline",
+            "Backend ngoại tuyến",
             icon="⚠️",
         )
 
@@ -200,7 +202,7 @@ with st.sidebar:
         )
 
     if st.button(
-        "Refresh connection",
+        "Làm mới kết nối",
         use_container_width=True,
     ):
         check_backend_health.clear()
@@ -208,39 +210,37 @@ with st.sidebar:
 
     st.divider()
 
-    st.markdown("**Day 4 scope**")
+    st.markdown("**Phạm vi Day 4**")
 
     st.caption(
-        "Overview · Inventory · Passport · "
-        "BOM Matching · Event Log"
+        "Tổng quan · Danh sách linh kiện · Hồ sơ số · "
+        "Đối chiếu BOM · Nhật ký sự kiện"
     )
 
     st.divider()
 
     st.caption(
-        "MSL Tracking và Verification chưa nằm "
-        "trong phạm vi chức năng Day 4."
+        "Theo dõi MSL và Xác minh chưa nằm trong "
+        "phạm vi chức năng của Day 4."
     )
 
 
+hero_html = (
+    '<section class="zt-hero">'
+    '<div class="zt-eyebrow">ZEROTAG REEL MVP</div>'
+    '<h1 class="zt-title">'
+    "Trung tâm truy xuất cuộn linh kiện"
+    "</h1>"
+    '<div class="zt-subtitle">'
+    "Dashboard vận hành tập trung để theo dõi cuộn linh kiện, "
+    "đối chiếu BOM, quản lý hồ sơ số và nhật ký sự kiện "
+    "trong môi trường SMT/EMS."
+    "</div>"
+    "</section>"
+)
+
 st.markdown(
-    """
-    <section class="zt-hero">
-        <div class="zt-eyebrow">
-            ZeroTag Reel MVP
-        </div>
-
-        <h1 class="zt-title">
-            Reel Traceability Control Center
-        </h1>
-
-        <div class="zt-subtitle">
-            Dashboard vận hành tập trung cho việc theo dõi
-            component reel, kiểm tra BOM, hồ sơ số và audit
-            event trong môi trường SMT/EMS.
-        </div>
-    </section>
-    """,
+    hero_html,
     unsafe_allow_html=True,
 )
 
@@ -251,16 +251,16 @@ title_column, status_column = st.columns(
 )
 
 with title_column:
-    st.subheader("Dashboard Core Pages")
+    st.subheader("Các chức năng chính")
 
     st.caption(
-        "Chọn một trang trong sidebar để bắt đầu."
+        "Chọn một trang trong thanh điều hướng để bắt đầu."
     )
 
 with status_column:
     if backend_online:
         st.success(
-            "Backend connected",
+            "Backend đã kết nối",
             icon="✅",
         )
 
@@ -269,20 +269,24 @@ with status_column:
         )
     else:
         st.warning(
-            "Backend offline",
+            "Backend ngoại tuyến",
             icon="⚠️",
         )
 
         st.caption(
-            "Khởi động FastAPI backend rồi bấm "
-            "Refresh connection."
+            "Khởi động FastAPI Backend rồi bấm "
+            "Làm mới kết nối."
         )
 
 
-columns = st.columns(3)
+first_row = st.columns(3)
 
-for index, page in enumerate(CORE_PAGES):
-    with columns[index % 3]:
+for column, page in zip(
+    first_row,
+    CORE_PAGES[:3],
+    strict=True,
+):
+    with column:
         render_page_card(
             page["number"],
             page["title"],
@@ -290,13 +294,29 @@ for index, page in enumerate(CORE_PAGES):
         )
 
 
-st.markdown(
-    """
-    <div class="zt-footer">
-        Day 4 · Streamlit Dashboard Core ·
-        Backend API health check active
-    </div>
-    """,
-    unsafe_allow_html=True,
+second_row = st.columns(3)
+
+for column, page in zip(
+    second_row[:2],
+    CORE_PAGES[3:],
+    strict=True,
+):
+    with column:
+        render_page_card(
+            page["number"],
+            page["title"],
+            page["description"],
+        )
+
+
+footer_html = (
+    '<div class="zt-footer">'
+    "Day 4 · Streamlit Dashboard Core · "
+    "Đã kích hoạt kiểm tra kết nối Backend API"
+    "</div>"
 )
 
+st.markdown(
+    footer_html,
+    unsafe_allow_html=True,
+)
