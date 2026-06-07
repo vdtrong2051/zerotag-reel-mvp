@@ -143,7 +143,6 @@ def _normalize_details(
 
     return list(details)
 
-
 def alert_panel_html(
     title: str,
     message: str,
@@ -155,19 +154,34 @@ def alert_panel_html(
         | None
     ) = None,
     status: Any | None = None,
+    compact: bool = False,
 ) -> str:
     """Tạo HTML an toàn cho Alert Panel."""
 
     normalized_tone = normalize_alert_tone(
-        tone
+        tone,
     )
 
     safe_title = escape(
-        title.strip() or "Thông báo"
+        title.strip() or "Thông báo",
     )
 
     safe_message = escape(
-        message.strip() or "Không có nội dung."
+        message.strip() or "Không có nội dung.",
+    )
+
+    alert_classes = [
+        "zt-alert",
+        f"zt-alert--{normalized_tone}",
+    ]
+
+    if compact:
+        alert_classes.append(
+            "zt-alert--compact",
+        )
+
+    alert_class = " ".join(
+        alert_classes,
     )
 
     status_html = ""
@@ -180,7 +194,7 @@ def alert_panel_html(
         )
 
     detail_items = _normalize_details(
-        details
+        details,
     )
 
     details_html = ""
@@ -190,11 +204,11 @@ def alert_panel_html(
 
         for label, value in detail_items:
             safe_label = escape(
-                str(label).strip() or "Thông tin"
+                str(label).strip() or "Thông tin",
             )
 
             safe_value = escape(
-                _display_value(value)
+                _display_value(value),
             )
 
             detail_rows.append(
@@ -217,8 +231,7 @@ def alert_panel_html(
         )
 
     return (
-        '<section class="zt-alert '
-        f'zt-alert--{normalized_tone}">'
+        f'<section class="{alert_class}">'
         '<div class="zt-alert__header">'
         '<div class="zt-alert__heading">'
         '<div class="zt-alert__title">'
@@ -234,7 +247,6 @@ def alert_panel_html(
         "</section>"
     )
 
-
 def render_alert_panel(
     title: str,
     message: str,
@@ -246,6 +258,7 @@ def render_alert_panel(
         | None
     ) = None,
     status: Any | None = None,
+    compact: bool = False,
 ) -> None:
     """Hiển thị Alert Panel trên Streamlit."""
 
@@ -256,10 +269,10 @@ def render_alert_panel(
             tone=tone,
             details=details,
             status=status,
+            compact=compact,
         ),
         unsafe_allow_html=True,
     )
-
 
 def build_scan_result_alert(
     scan_view: Mapping[str, Any],

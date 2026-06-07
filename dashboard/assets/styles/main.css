@@ -104,7 +104,7 @@
     --zt-radius-large: 8px;
 
     /* Dimensions */
-    --zt-sidebar-width: 244px;
+    --zt-sidebar-width: 216px;
     --zt-header-height: 64px;
     --zt-table-row-height: 44px;
     --zt-input-height: 38px;
@@ -255,8 +255,37 @@ hr {
     background: var(--zt-bg-sidebar);
 }
 
-[data-testid="stSidebar"] * {
+[data-testid="stSidebar"] {
     font-family: var(--zt-font-family);
+}
+
+[data-testid="stSidebar"] p,
+[data-testid="stSidebar"] a,
+[data-testid="stSidebar"] button,
+[data-testid="stSidebar"] label,
+[data-testid="stSidebar"] input,
+[data-testid="stSidebar"] textarea,
+[data-testid="stSidebar"] code,
+[data-testid="stSidebar"] strong,
+[data-testid="stSidebar"] h1,
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {
+    font-family: var(--zt-font-family);
+}
+
+/* Không ép font Segoe UI lên Material Symbols. */
+[data-testid="stSidebar"] [data-testid="stIconMaterial"],
+[data-testid="stSidebar"] [class*="material-symbol"] {
+    font-family: "Material Symbols Rounded" !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    line-height: 1 !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+    white-space: nowrap !important;
+    word-wrap: normal !important;
+    font-feature-settings: "liga" !important;
+    -webkit-font-feature-settings: "liga" !important;
 }
 
 [data-testid="stSidebar"] h1,
@@ -526,135 +555,328 @@ hr {
     font-weight: var(--zt-weight-semibold);
 }
 
-
 /* ---------------------------------------------------------
    7. Metric cards
    --------------------------------------------------------- */
 
 .zt-metric-card {
     position: relative;
-    min-height: 126px;
-    padding: var(--zt-space-4);
+
+    display: grid;
+    grid-template-columns: 46px minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto;
+    column-gap: 12px;
+    row-gap: 4px;
+
+    box-sizing: border-box;
+
+    width: 100%;
+    height: 134px;
+    min-height: 134px;
+    max-height: 134px;
+
+    padding: 15px 14px 13px 16px;
+
     overflow: hidden;
+
     background: var(--zt-bg-panel);
+
     border: 1px solid var(--zt-border-default);
     border-radius: var(--zt-radius-large);
+
     box-shadow: var(--zt-shadow-panel);
 }
 
+
+/* Thanh nhận diện trạng thái ở cạnh trái. */
 .zt-metric-card::before {
     position: absolute;
+
     top: 0;
+    bottom: 0;
     left: 0;
+
     width: 4px;
-    height: 100%;
+
     background: var(--zt-primary);
+
     content: "";
 }
 
-.zt-metric-card__label {
-    margin-bottom: var(--zt-space-2);
-    color: var(--zt-text-secondary);
-    font-size: var(--zt-font-card-title);
-    font-weight: var(--zt-weight-medium);
-}
 
-.zt-metric-card__value {
-    color: var(--zt-text-primary);
-    font-size: var(--zt-font-metric);
-    font-weight: var(--zt-weight-bold);
-    line-height: 1.1;
-}
-
-.zt-metric-card__caption {
-    margin-top: var(--zt-space-2);
-    color: var(--zt-text-muted);
-    font-size: var(--zt-font-caption);
-}
-
-.zt-metric-card__top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--zt-space-3);
-    margin-bottom: var(--zt-space-3);
-}
-
+/*
+Hai wrapper này không tạo thêm hộp layout.
+Icon và label trở thành phần tử trực tiếp của grid card.
+*/
+.zt-metric-card__top,
 .zt-metric-card__label-group {
-    display: flex;
-    align-items: center;
-    min-width: 0;
-    gap: var(--zt-space-2);
+    display: contents;
 }
 
+
+/* Icon lớn dạng tròn gần giống thiết kế tham chiếu. */
 .zt-metric-card__icon {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    flex: 0 0 auto;
-    width: 30px;
-    height: 30px;
+
+    align-self: start;
+
+    box-sizing: border-box;
+
+    width: 46px;
+    min-width: 46px;
+    max-width: 46px;
+
+    height: 46px;
+    min-height: 46px;
+    max-height: 46px;
+
     color: var(--zt-primary-active);
     background: var(--zt-primary-soft);
+
     border: 1px solid #abd5d8;
-    border-radius: var(--zt-radius-small);
-    font-size: 14px;
+    border-radius: 50%;
+
+    overflow: hidden;
+
+    font-size: 16px;
     font-weight: var(--zt-weight-bold);
     line-height: 1;
 }
 
+/* SVG icon bên trong Metric Card. */
+.zt-metric-card__icon-svg {
+    display: block;
+
+    width: 24px;
+    min-width: 24px;
+    max-width: 24px;
+
+    height: 24px;
+    min-height: 24px;
+    max-height: 24px;
+
+    color: inherit;
+
+    pointer-events: none;
+}
+
+/* Nhãn nằm bên phải icon. */
+.zt-metric-card__label {
+    grid-column: 2;
+    grid-row: 1;
+
+    display: -webkit-box;
+
+    min-width: 0;
+    min-height: 34px;
+
+    margin: 0;
+
+    overflow: hidden;
+
+    color: var(--zt-text-secondary);
+
+    font-size: 13px;
+    font-weight: var(--zt-weight-medium);
+    line-height: 17px;
+
+    overflow-wrap: anywhere;
+
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+
+/* Giá trị nằm ngay dưới nhãn. */
 .zt-metric-card__value-line {
+    grid-column: 2;
+    grid-row: 2;
+
     display: flex;
     align-items: baseline;
-    gap: var(--zt-space-2);
+
+    align-self: start;
+
+    min-width: 0;
+
+    gap: 6px;
+
+    margin: 1px 0 0;
 }
 
+
+/* Giá trị chính. */
+.zt-metric-card__value {
+    min-width: 0;
+
+    color: var(--zt-text-primary);
+
+    font-size: 29px;
+    font-weight: var(--zt-weight-bold);
+    line-height: 1;
+
+    white-space: nowrap;
+}
+
+
+/* Đơn vị đi cùng giá trị. */
 .zt-metric-card__unit {
+    min-width: 0;
+
+    overflow: hidden;
+
     color: var(--zt-text-muted);
-    font-size: 12px;
+
+    font-size: 11px;
     font-weight: var(--zt-weight-medium);
+    line-height: 1.2;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
+
+/* Chú thích chiếm toàn chiều ngang phía dưới. */
+.zt-metric-card__caption {
+    grid-column: 1 / -1;
+    grid-row: 3;
+
+    display: -webkit-box;
+
+    min-width: 0;
+    min-height: 28px;
+
+    margin: 3px 0 0;
+
+    overflow: hidden;
+
+    color: var(--zt-text-muted);
+
+    font-size: 11px;
+    line-height: 14px;
+
+    overflow-wrap: anywhere;
+
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+
+/* Tone: Success */
 .zt-metric-card--success .zt-metric-card__icon {
     color: var(--zt-success-strong);
     background: var(--zt-success-soft);
     border-color: var(--zt-success-border);
 }
 
+.zt-metric-card--success::before {
+    background: var(--zt-success);
+}
+
+
+/* Tone: Warning */
 .zt-metric-card--warning .zt-metric-card__icon {
     color: var(--zt-warning-strong);
     background: var(--zt-warning-soft);
     border-color: var(--zt-warning-border);
 }
 
+.zt-metric-card--warning::before {
+    background: var(--zt-warning);
+}
+
+
+/* Tone: Danger */
 .zt-metric-card--danger .zt-metric-card__icon {
     color: var(--zt-danger-strong);
     background: var(--zt-danger-soft);
     border-color: var(--zt-danger-border);
 }
 
+.zt-metric-card--danger::before {
+    background: var(--zt-danger);
+}
+
+
+/* Tone: Information */
 .zt-metric-card--info .zt-metric-card__icon {
     color: var(--zt-info-strong);
     background: var(--zt-info-soft);
     border-color: var(--zt-info-border);
 }
 
-.zt-metric-card--success::before {
-    background: var(--zt-success);
-}
-
-.zt-metric-card--warning::before {
-    background: var(--zt-warning);
-}
-
-.zt-metric-card--danger::before {
-    background: var(--zt-danger);
-}
-
 .zt-metric-card--info::before {
     background: var(--zt-info);
 }
 
+
+/* Tone: Neutral */
+.zt-metric-card--neutral .zt-metric-card__icon {
+    color: var(--zt-neutral);
+    background: var(--zt-neutral-soft);
+    border-color: var(--zt-neutral-border);
+}
+
+.zt-metric-card--neutral::before {
+    background: var(--zt-neutral);
+}
+
+
+/*
+Khi cửa sổ hơi hẹp, giảm nhẹ icon và khoảng cách,
+nhưng không đổi cấu trúc sáu cột.
+*/
+@media (max-width: 1280px) {
+    .zt-metric-card {
+        grid-template-columns: 40px minmax(0, 1fr);
+        column-gap: 9px;
+
+        height: 132px;
+        min-height: 132px;
+        max-height: 132px;
+
+        padding-right: 10px;
+        padding-left: 13px;
+    }
+
+    .zt-metric-card__icon {
+        width: 40px;
+        min-width: 40px;
+        max-width: 40px;
+
+        height: 40px;
+        min-height: 40px;
+        max-height: 40px;
+
+        font-size: 14px;
+    }
+
+    .zt-metric-card__icon-svg {
+        width: 21px;
+        min-width: 21px;
+        max-width: 21px;
+
+        height: 21px;
+        min-height: 21px;
+        max-height: 21px;
+    }
+
+    .zt-metric-card__label {
+        font-size: 12px;
+        line-height: 16px;
+    }
+
+    .zt-metric-card__value {
+        font-size: 26px;
+    }
+}
 
 /* ---------------------------------------------------------
    8. Status badges
@@ -757,6 +979,52 @@ hr {
     background: var(--zt-info-soft);
     border-color: var(--zt-info-border);
     border-left-color: var(--zt-info);
+}
+
+/* Alert gọn dùng cho trạng thái Backend và lỗi tải dữ liệu. */
+.zt-alert--compact {
+    margin: 0;
+    padding: 11px 13px;
+
+    border-left-width: 4px;
+
+    box-shadow: none;
+}
+
+.zt-alert--compact .zt-alert__header {
+    align-items: center;
+
+    gap: var(--zt-space-2);
+}
+
+.zt-alert--compact .zt-alert__heading {
+    min-width: 0;
+}
+
+.zt-alert--compact .zt-alert__title {
+    margin: 0;
+
+    font-size: 13px;
+    line-height: 1.35;
+}
+
+.zt-alert--compact .zt-alert__message {
+    margin-top: 3px;
+
+    color: var(--zt-text-secondary);
+
+    font-size: 12px;
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
+}
+
+.zt-alert--compact .zt-alert__status {
+    align-self: flex-start;
+}
+
+.zt-alert--compact .zt-alert__details {
+    display: none;
 }
 
 .zt-alert__header {
@@ -1660,16 +1928,39 @@ textarea::placeholder {
    18. Built-in alerts
    --------------------------------------------------------- */
 
-[data-testid="stAlert"] {
-    border-radius: var(--zt-radius-medium);
-    box-shadow: none;
+[data-testid="stAlert"],
+[data-baseweb="notification"] {
+    color: var(--zt-text-primary) !important;
+
+    border: 1px solid var(--zt-border-default) !important;
+    border-radius: var(--zt-radius-medium) !important;
+
+    box-shadow: none !important;
+
+    opacity: 1 !important;
 }
 
-[data-testid="stAlert"] p {
-    color: inherit;
-    font-size: 13px;
+[data-testid="stAlert"] p,
+[data-testid="stAlert"] div,
+[data-baseweb="notification"] p,
+[data-baseweb="notification"] div {
+    color: inherit !important;
+
+    opacity: 1 !important;
 }
 
+[data-testid="stAlert"] p,
+[data-baseweb="notification"] p {
+    font-size: 13px !important;
+    line-height: 1.45 !important;
+}
+
+[data-testid="stAlert"] svg,
+[data-baseweb="notification"] svg {
+    color: currentColor !important;
+
+    opacity: 1 !important;
+}
 
 /* ---------------------------------------------------------
    19. Code blocks
@@ -1784,4 +2075,166 @@ textarea:focus-visible,
     max-width: 100%;
     overflow-wrap: anywhere;
     white-space: normal;
+}
+
+/* ---------------------------------------------------------
+   F6. Overview responsive layout and regression hardening
+   --------------------------------------------------------- */
+
+/*
+Chỉ tác động các vùng Overview đã gắn key.
+Không can thiệp sidebar, stMain hoặc app root.
+*/
+.st-key-zt_overview_metrics,
+.st-key-zt_overview_insights {
+    box-sizing: border-box;
+
+    width: 100%;
+    min-width: 0;
+}
+
+
+/* Sáu Metric Card trên một hàng ở desktop rộng. */
+.st-key-zt_overview_metrics
+[data-testid="stHorizontalBlock"] {
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(6, minmax(0, 1fr)) !important;
+
+    align-items: stretch !important;
+
+    gap: 12px !important;
+
+    width: 100% !important;
+    min-width: 0 !important;
+}
+
+
+/* Bỏ chiều rộng inline của st.columns khi dùng CSS Grid. */
+.st-key-zt_overview_metrics
+[data-testid="stHorizontalBlock"]
+> [data-testid="stColumn"] {
+    flex: none !important;
+
+    box-sizing: border-box !important;
+
+    width: auto !important;
+    min-width: 0 !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+
+/* Card luôn chiếm đầy ô grid. */
+.st-key-zt_overview_metrics
+.zt-metric-card {
+    width: 100%;
+
+    margin: 0;
+}
+
+
+/* Ba panel Overview theo đúng tỷ lệ thiết kế. */
+.st-key-zt_overview_insights
+[data-testid="stHorizontalBlock"] {
+    display: grid !important;
+
+    grid-template-columns:
+        minmax(0, 1.1fr)
+        minmax(0, 1.5fr)
+        minmax(0, 1fr) !important;
+
+    align-items: stretch !important;
+
+    gap: 20px !important;
+
+    width: 100% !important;
+    min-width: 0 !important;
+}
+
+
+.st-key-zt_overview_insights
+[data-testid="stHorizontalBlock"]
+> [data-testid="stColumn"] {
+    flex: none !important;
+
+    box-sizing: border-box !important;
+
+    width: auto !important;
+    min-width: 0 !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+
+/*
+Ngăn text, bảng hoặc chart kéo rộng cột
+và gây thanh cuộn ngang.
+*/
+.st-key-zt_overview_metrics *,
+.st-key-zt_overview_insights * {
+    min-width: 0;
+}
+
+
+/* Laptop hoặc cửa sổ trung bình: Metric Card chuyển 3 x 2. */
+@media (max-width: 1280px) {
+    .st-key-zt_overview_metrics
+    [data-testid="stHorizontalBlock"] {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr)) !important;
+    }
+
+    .st-key-zt_overview_insights
+    [data-testid="stHorizontalBlock"] {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .st-key-zt_overview_insights
+    [data-testid="stHorizontalBlock"]
+    > [data-testid="stColumn"]:last-child {
+        grid-column: 1 / -1;
+    }
+}
+
+
+/* Tablet: Metric Card chuyển 2 cột, panel xếp dọc. */
+@media (max-width: 900px) {
+    .st-key-zt_overview_metrics
+    [data-testid="stHorizontalBlock"] {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .st-key-zt_overview_insights
+    [data-testid="stHorizontalBlock"] {
+        grid-template-columns:
+            minmax(0, 1fr) !important;
+    }
+
+    .st-key-zt_overview_insights
+    [data-testid="stHorizontalBlock"]
+    > [data-testid="stColumn"]:last-child {
+        grid-column: auto;
+    }
+}
+
+
+/* Màn hình nhỏ: mỗi Metric Card chiếm một hàng. */
+@media (max-width: 640px) {
+    .st-key-zt_overview_metrics
+    [data-testid="stHorizontalBlock"] {
+        grid-template-columns:
+            minmax(0, 1fr) !important;
+    }
+
+    .zt-metric-card {
+        height: 128px;
+        min-height: 128px;
+        max-height: 128px;
+    }
 }
